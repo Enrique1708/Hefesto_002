@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // TODO Auto-generated method stub
                 //Aqui el codigo que queremos que ejecute al ser pulsado
-                Intent intent = new Intent (v.getContext(), MainActivity.class);
+                Intent intent = new Intent (v.getContext(), FormularioRegistroActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY); // Adds the FLAG_ACTIVITY_NO_HISTORY flag
                 startActivity(intent);
             }

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="10dp"
+    tools:context="corp.carrizales.hefesto_002.FormularioRegistroActivity">
+
+    <LinearLayout
+        android:layout_width="358dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <EditText
+            android:id="@+id/txb_modeloMoto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Modelo de motocicleta"
+            android:layout_marginTop="20dp"
+            android:ems="10"/>
+
+        <EditText
+            android:id="@+id/txb_contraseña"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:hint="Contraseña"
+            android:ems="6"
+            android:inputType="textPassword" />
+
+        <EditText
+            android:id="@+id/txb_contraseñaConfirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:hint="Contraseña"
+            android:ems="6"
+            android:inputType="textPassword" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="¿Cual es Kilometraje Actual?"
+            android:layout_marginTop="10dp" />
+
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="6"
+            android:inputType="number" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="¿Que aceite usas?"
+            android:layout_marginTop="10dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp" >
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="123dp"
+                android:layout_height="28dp"
+                android:layout_marginRight="10dp"/>
+
+            <Spinner
+                android:id="@+id/spinner2"
+                android:layout_width="122dp"
+                android:layout_height="28dp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="¿Cuando hiciste el cambio de haceite?" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/editText3"
+                android:layout_width="67dp"
+                android:layout_height="40dp"
+                android:ems="10"
+                android:inputType="number" />
+            <Spinner
+                android:id="@+id/spinner3"
+                android:layout_width="85dp"
+                android:layout_height="36dp"  />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_registro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:text="Registrarse" />
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
