@@ -18,4 +18,50 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
+
+    <string-array name="listaTitulosComponentesMantenimiento">
+        <item>Bujia</item>
+        <item>Aceite del Motor</item>
+        <item>Filtro de Aire</item>
+        <item>Cadena</item>
+        <item>Ruedas</item>
+        <item>Tornillos y tuercas del Chasis</item>
+        <item>Tornillos del Escape</item>
+    </string-array>
+    <string-array name="listaComponentesMantenimiento">
+        <item>Su perfecto desempeño esta directamente asociado al rendimiento del motor, los niveles de consumo de combustible, la mayor o menor carga de contaminantes en los gases expedidos por el escape.</item>
+        <item>El aceite al ser expuesto a las altas temperaturas y esfuerzos dentro del motor inicia un proceso de degradación que afecta negativamente las propiedades que le permiten proteger el motor del vehículo.</item>
+        <item>El filtro del aire deja pasar el oxígeno el cual es uno de los tres elementos imprescindibles para generar la explosión dentro del cilindro que, a su vez, genera el movimiento del motor.</item>
+        <item>Tiene como función transmitir el giro del motor a la rueda trasera, lo que la convierte en uno de los componentes más importantes de este vehículo de dos ruedas.</item>
+        <item>Las ruedas cumple algunas funciones como ser el de proteger el neomatico, proporcionar agarre con el suelo y el de proporsionar suspencion de manera parcial.</item>
+        <item>Su funcion es de sujetar todos los elementos que forman parte de tu moto, como las ruedas, frenos, suspensiones, motor, depósito de combustible y el propio piloto. Y se encarga justamente de que todo esto esté unido y sea un solo conjunto.</item>
+        <item>Cumplen la funcion de sujecion al chasis, para evitar que el escape se encuentre desviado de la salida de emision del motor.</item>
+    </string-array>
+
+    <string-array name="auxspnrMeses">
+        <item>Seleccionar</item>
+    </string-array>
+
+    <string-array name="tiposAceite">
+        <item>Mineral-AP</item>
+        <item>SemiSintetico-SS</item>
+        <item>FullSintetico-FS</item>
+    </string-array>
+
+    <string-array name="aceites_mineral">
+        <item>SAE 5W-30 AP</item>
+        <item>SAE 10W-40 AP</item>
+        <item>SAE 20W-50 AP</item>
+    </string-array>
+    <string-array name="aceites_semi_sintetico">
+        <item>SAE 0W-30 SS</item>
+        <item>SAE 5W-40 SS</item>
+        <item>SAE 10W-50 SS</item>
+        <item>SAE 20W-50 SS</item>
+    </string-array>
+    <string-array name="aceites_full_sintetico">
+        <item>SAE 0W-40 FS</item>
+        <item>SAE 15W-30 FS</item>
+        <item>SAE 15W-50 FS</item>
+    </string-array>
 </resources>

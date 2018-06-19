@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimary">#58ACFA</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#000000</color>
+
+    <!--MI CODIGO
+    -->
+
+    <color name="window_background">#EEEEEE</color>
+
+    <color name="primaryColor">#be6c6e6f</color>
+    <color name="primaryDarkColor">#689F38</color>
+    <color name="accentColor">#fad317</color>
+    <color name="primaryColor2">#3c3f41</color>
+    <color name="listaNotificacion">#58ACFA</color>
+
+    <color name="negroTransparente_55">#99000000</color>
+    <color name="BlancoTransparente_80">#D9FFFFFF</color>
+
+    <color name="verde_azulado">#00FF80</color>
+    <color name="verde_fosforecente">#00FF40</color>
+    <color name="amarillo_patito">#FFFF00</color>
+    <color name="rojo_peligro">#F51319</color>
+
 </resources>

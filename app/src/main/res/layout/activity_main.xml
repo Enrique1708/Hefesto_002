@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_content"
@@ -12,6 +13,7 @@
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/primaryColor"
         android:paddingTop="2dp"
         android:theme="@style/AppTheme.AppBarOverlay">
 
@@ -19,27 +21,29 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:background="?attr/colorPrimaryDark"
-            app:layout_scrollFlags="scroll|enterAlways"
+            android:background="@color/primaryColor2"
             app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <TextView
+                android:id="@+id/txv_modeloMotocicleta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true" />
 
             <RelativeLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="260dp">
-
-                <TextView
-                    android:id="@+id/txv_estadoBluetooth"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Conectado"
-                    android:layout_centerVertical="true"/>
-
+                android:layout_height="wrap_content">
                 <Switch
+                    android:id="@+id/switchBluetooth"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_alignParentRight="true" />
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:text="Desconectado"
+                    android:textColor="@color/window_background"
+                    android:theme="@style/SCBSwitch"
+                    tools:checked="false" />
 
             </RelativeLayout>
 
@@ -48,15 +52,16 @@
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
+            android:layout_height="wrap_content"
+            android:background="@color/primaryColor"
+            app:tabIndicatorColor="@android:color/black" />
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager
-
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/background_light"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 

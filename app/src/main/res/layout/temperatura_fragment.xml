@@ -2,10 +2,118 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <TextView
-        android:id="@+id/textView3"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Temperatura" />
+        android:layout_height="290dp"
+        android:layout_marginTop="10dp">
+
+        <FrameLayout
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_marginTop="6dp"
+            android:layout_gravity="center">
+
+            <com.sccomponents.gauges.ScArcGauge
+                xmlns:sc="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/gauge1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:padding="30dp"
+                sc:angleStart="135"
+                sc:angleSweep="270"
+                sc:strokeSize="40dp" />
+
+            <ImageView
+                android:id="@+id/indicator1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/indicator1" />
+
+            <TextView
+                android:id="@+id/counter1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="2dp"
+                android:text="0°c"
+                android:textColor="#f5f5f5"
+                android:textSize="40dp"
+                android:textStyle="bold" />
+        </FrameLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical">
+            <Spinner
+                android:id="@+id/spnr_tipos_aceite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/tiposAceite">
+            </Spinner>
+            <Spinner
+                android:id="@+id/spnr_aceites_seleccionados"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+            </Spinner>
+        </LinearLayout>
+        <Button
+            android:id="@+id/btn_realizar_analizar_temperatura"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:textSize="11dp"
+            android:background="@drawable/btn_circle"
+            android:layout_marginLeft="115dp"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:text="Analizar" />
+        <TextView
+            android:id="@+id/txb_descricicon_aceiteSAE"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_gravity="bottom|center"
+            android:background="@color/window_background"
+            android:text="*Has click en 'ANALIZAR' para obtener infromacion"/>
+
+    </FrameLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="left|center">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Seleccione Año:"/>
+            <Spinner
+                android:id="@+id/spnr_añosLineChartTemp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="10dp">
+            </Spinner>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:text="Mes:"/>
+            <Spinner
+                android:id="@+id/spnr_mesesLineChartTemp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </Spinner>
+        </LinearLayout>
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/lineChart"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:layout_width="310dp"
+            android:layout_height="210dp" />
+    </FrameLayout>
 </LinearLayout>

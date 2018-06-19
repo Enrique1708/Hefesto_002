@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+   <FrameLayout
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:background="@color/negroTransparente_55"
+       android:gravity="center"
+       android:orientation="vertical">
+       <FrameLayout
+           android:layout_width="190dp"
+           android:layout_height="260dp"
+           android:layout_alignParentTop="true"
+           android:layout_margin="10dp"
+           android:layout_marginTop="20dp">
+
+           <TextView
+               android:id="@+id/txb_titulo_componente"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_gravity="top|center"
+               android:text="Titulo"
+               android:textSize="17dp"
+               android:textColor="#FFFFFF"
+               android:textStyle="bold"/>
+            <ImageView
+                android:id="@+id/imgComponente"
+                android:layout_width="190dp"
+                android:layout_height="120dp"
+                android:background="#FFFFFF"
+                android:layout_marginBottom="20dp"
+                android:layout_gravity="center_vertical|center_horizontal" />
+           <ScrollView
+               android:fadeScrollbars="false"
+               android:layout_width="190dp"
+               android:layout_height="80dp"
+               android:layout_marginBottom="3dp"
+               android:background="@color/BlancoTransparente_80"
+               android:layout_gravity="bottom|center">
+               <TextView
+                   android:id="@+id/txb_descripcion_componete"
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:textColor="@color/colorAccent"/>
+           </ScrollView>
+       </FrameLayout>
+       <Button
+           android:id="@+id/id_cerrar"
+           android:layout_width="20dp"
+           android:layout_height="20dp"
+           android:background="@drawable/btn_circle"
+           android:layout_gravity="top|right"
+           android:text="X" />
+   </FrameLayout>
+
+</android.support.constraint.ConstraintLayout>
