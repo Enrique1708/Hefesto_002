@@ -31,7 +31,6 @@
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".FormularioRegistroActivity" />
-        <activity android:name=".ListDispositivosActivity"></activity>
     </application>
 
 </manifest>

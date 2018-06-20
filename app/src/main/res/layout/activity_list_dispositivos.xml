@@ -3,12 +3,13 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/BlancoTransparente_80"
     >
     <TextView android:id="@+id/title_paired_devices"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Seleccione un dispositivo btSerial "
+        android:text="Seleccione Hefesto_Server"
         android:visibility="gone"
         android:background="#666"
         android:textColor="#fff"
@@ -17,12 +18,12 @@
     <ListView android:id="@+id/paired_devices"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/azulTransparente_55"
         android:stackFromBottom="false"
         android:layout_weight="1"
         />
 
     <TextView
-        android:id="@+id/connecting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -35,12 +36,4 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_margin="5dp"
         android:textSize="18dp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center">
-
-    </LinearLayout>
-
 </LinearLayout>
