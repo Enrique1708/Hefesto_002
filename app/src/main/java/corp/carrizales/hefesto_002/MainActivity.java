@@ -4,7 +4,10 @@ import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Message;
 import android.support.design.widget.TabLayout;
@@ -12,12 +15,10 @@ import android.support.v7.app.AppCompatActivity;
 
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -30,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
@@ -42,71 +44,61 @@ import corp.carrizales.hefesto_002.sqlite.OperacionesBaseDatos;
 
 public class MainActivity extends AppCompatActivity {
 
+    // <editor-fold desc="COMPONENTES DE LOS NAVEGADORES DEL MENU (TABS)">
+    private SectionsPageAdapter mSectionsPageAdapter;
+    private ViewPager mViewPager;
+    Bundle bundle = new Bundle();
+    // </editor-fold>
+    // <editor-fold desc="COMPONENTES DE LA CLASE">
     OperacionesBaseDatos datos;
 
-    private String idModMotocicleta;
-    private int nivelGasolina;
-    private int temperaturaMotor;
-    private int kilometrajeMoto;
-
-    private int kilometrajeServidor;
-
-    private static final String TAG = "MainActivity";
-
-    private SectionsPageAdapter mSectionsPageAdapter;
-
     private Switch switchBluetooth;
-
-
-    View popupView;
-    LayoutInflater layoutInflaterListDispositivos;
-    PopupWindow popupWindow_ListDispositivos;
-    // EXTRA string to send on to mainactivity
-    public static String EXTRA_DEVICE_ADDRESS = "device_address";
-
-    // Member fields
-    private BluetoothAdapter mBtAdapter;
-    private ArrayAdapter mPairedDevicesArrayAdapter;
-
-    //////CODIGO BLUETOOTH////////////////////////////////////////
-    BluetoothAdapter mBluetoothAdapter = null;                  //
-    int ENABLE_BLEIntent = 1;                                   //
-    int SOLICITA_CONEXION = 2;                                  //
-    private BluetoothSocket btSocket = null;
-    // String for MAC address
-    private static String address = null;
-
-    Handler bluetoothIn;
-    final int handlerState = 0;
-    private StringBuilder recDataString = new StringBuilder();
-
-
-    // SPP UUID service - this should work for most devices
-    private static final UUID BTMODULEUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-
-    String txtString; /// mensaje que recive
-    String txtStringLength; // largo del string
-
-    private ConnectedThread mConnectedThread;
-    //////////////////////////////////////////////////////////////
-
-    private Button bt_chekEngine;
-
-    private ViewPager mViewPager;
-
-    private TextView txv_modeloMotocicleta;
-
-    Bundle bundle = new Bundle();
-
-    Motocicleta motocicleta = new Motocicleta();
+    TextView txv_modeloMotocicleta;
 
     private static TabLayout tabLayout2;
 
-    //VARIABLES PARA GENERAR HISTORIALKILOMETRAJE
+    private String idModMotocicleta;
+
+    Motocicleta motocicleta = new Motocicleta();
+    // </editor-fold>
+    // <editor-fold desc="VARIABLES DE LA MOTOCICLETA-SERVIDOR">
+    private int nivelGasolina;
+    private int temperaturaMotor;
+    private int kilometrajeServidor;
+    // </editor-fold>
+    // <editor-fold desc="POPUP LISTA DE DISPOSITIVOS">
+    View popupView;
+    LayoutInflater layoutInflaterListDispositivos;
+    PopupWindow popupWindow_ListDispositivos;
+    // </editor-fold>
+    // <editor-fold desc="VARIABLES PARA GENERAR HISTORIALKILOMETRAJE">
     int kilometrajeInicial;
     int kilometrajeActual;
     int kilometrajeActualAxiliar;
+    // </editor-fold>
 
+    //private int kilometrajeMoto;
+
+    //////CODIGO BLUETOOTH////////////////////////////////////////
+    private BluetoothAdapter mBluetoothAdapter = null;
+    private BluetoothSocket btSocket = null;
+
+    private ConnectionThread mBluetoothConnection = null;
+
+    private String data;
+    private boolean mServerMode;
+
+    private static final String TAG = "MainActivity";
+    private static final int REQUEST_ENABLE_BT = 0;
+    private static final int SELECT_SERVER = 1;
+    public static final int DATA_RECEIVED = 3;
+    public static final int SOCKET_CONNECTED = 4;
+
+    int ENABLE_BLEIntent = 1;
+    // SPP UUID service - this should work for most devices
+    public static final UUID APP_UUID = UUID
+            .fromString("aeb9f938-a1a3-4947-ace2-9ebd0c67adf1");
+    private ArrayAdapter mPairedDevicesArrayAdapter;
 
     @SuppressLint("HandlerLeak")
     @Override
@@ -118,18 +110,13 @@ public class MainActivity extends AppCompatActivity {
 
         motocicleta = (Motocicleta)getIntent().getExtras().getSerializable("motocicleta");
         idModMotocicleta = motocicleta.getId();
-        kilometrajeMoto = motocicleta.getKilometraje();
+        //kilometrajeMoto = motocicleta.getKilometraje();
 
         switchBluetooth = (Switch)findViewById(R.id.switchBluetooth);
-
         txv_modeloMotocicleta = (TextView)findViewById(R.id.txv_modeloMotocicleta);
         txv_modeloMotocicleta.setText(motocicleta.getModelo());
 
-        Log.d(TAG, "onCreate: Starting.");
-
         mSectionsPageAdapter = new SectionsPageAdapter(getSupportFragmentManager());
-
-
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         setupViewPager(mViewPager);
@@ -141,29 +128,7 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout2 = tabLayout;
 
-
         actualizarKilometrajeMotocicleta(motocicleta);
-
-        bluetoothIn = new Handler(){
-            public void handleMassage(Message msg){
-                if (msg.what == handlerState) {          //if message is what we want
-                    String readMessage = (String) msg.obj;                                                                // msg.arg1 = bytes from connect thread
-                    recDataString.append(readMessage);              //keep appending to string until ~
-                    int endOfLineIndex = recDataString.indexOf("~");                    // determine the end-of-line
-                    if (endOfLineIndex > 0) {                                           // make sure there data before ~
-                        String dataInPrint = recDataString.substring(0, endOfLineIndex);    // extract string
-                        txtString = ("Datos recibidos = " + dataInPrint);
-                        int dataLength = dataInPrint.length();       //get length of data received
-                        txtStringLength = ("Tamaño del String = " + String.valueOf(dataLength));
-
-                        //recDataString.charAt(0);
-                        recDataString.delete(0, recDataString.length());      //clear all string data
-                        // strIncom =" ";
-                        dataInPrint = " ";
-                    }
-                }
-            }
-        };
 
         switchBluetooth.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -171,7 +136,8 @@ public class MainActivity extends AppCompatActivity {
                 if (bChecked) {
                     encenderBluetooth();
                     if(mBluetoothAdapter.isEnabled()){
-                        popupListaDispositivos();
+                        //popupListaDispositivos();
+                        selectServer();
 
                         nivelGasolina = 50;
                         temperaturaMotor = 147;
@@ -185,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                         switchBluetooth.setChecked(false);
                     }
                 } else {
-                    apagarBluetooth();
+                    //apagarBluetooth();
 
                     nivelGasolina = 0;
                     temperaturaMotor = 0;
@@ -197,16 +163,65 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private BluetoothSocket createBluetoothSocket(BluetoothDevice device) throws IOException {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_ENABLE_BT && resultCode == RESULT_OK) {
+            //setButtonsEnabled(true);
+        } else if (requestCode == SELECT_SERVER
+                && resultCode == RESULT_OK) {
+            BluetoothDevice device = data
+                    .getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+            connectToBluetoothServer(device.getAddress());
+        }
+    }
 
-        return  device.createRfcommSocketToServiceRecord(BTMODULEUUID);
-        //creates secure outgoing connecetion with BT device using UUID
+    private void connectToBluetoothServer(String id) {
+        //tv.setText("Connecting to Server...");
+        new ConnectThread(id, mHandler).start();
+    }
+
+    @SuppressLint("HandlerLeak")
+    public Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case SOCKET_CONNECTED: {
+                    mBluetoothConnection = (ConnectionThread) msg.obj;
+                    if (!mServerMode)
+                        mBluetoothConnection.write("this is a message".getBytes());
+                    break;
+                }
+                case DATA_RECEIVED: {
+                    data = (String) msg.obj;
+                    /* tv.setText(data); */
+                    if (mServerMode)
+                        mBluetoothConnection.write(data.getBytes());
+                }
+                default:
+                    break;
+            }
+        }
+    };
+
+    private void selectServer() {
+
+        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter
+                .getBondedDevices();
+        ArrayList<String> pairedDeviceStrings = new ArrayList<String>();
+        if (pairedDevices.size() > 0) {
+            for (BluetoothDevice device : pairedDevices) {
+                pairedDeviceStrings.add(device.getName() + "\n"
+                        + device.getAddress());
+            }
+        }
+        Intent showDevicesIntent = new Intent(this, ShowDevices.class);
+        showDevicesIntent.putStringArrayListExtra("devices", pairedDeviceStrings);
+        startActivityForResult(showDevicesIntent, SELECT_SERVER);
     }
 
     private void encenderBluetooth(){
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter == null) {
-            // Este dispositivo no soporta Bluetooth
             Toast toast1 = Toast.makeText(getApplicationContext(),
                     "Este dispositivo no soporta Bluetooth", Toast.LENGTH_SHORT);
             toast1.show();
@@ -224,93 +239,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e2) {
             //insert code to deal with this
         }
-    }
-
-    //create new class for connect thread
-    private class ConnectedThread extends Thread {
-        private final InputStream mmInStream;
-        private final OutputStream mmOutStream;
-
-        //creation of the connect thread
-        public ConnectedThread(BluetoothSocket socket) {
-            InputStream tmpIn = null;
-            OutputStream tmpOut = null;
-
-            try {
-                //Create I/O streams for connection
-                tmpIn = socket.getInputStream();
-                tmpOut = socket.getOutputStream();
-            } catch (IOException e) { }
-
-            mmInStream = tmpIn;
-            mmOutStream = tmpOut;
-        }
-
-
-        public void run() {
-            byte[] buffer = new byte[256];
-            int bytes;
-
-            // Keep looping to listen for received messages
-            while (true) {
-                try {
-                    bytes = mmInStream.read(buffer);         //read bytes from input buffer
-                    String readMessage = new String(buffer, 0, bytes);
-                    // Send the obtained bytes to the UI Activity via handler
-                    bluetoothIn.obtainMessage(handlerState, bytes, -1, readMessage).sendToTarget();
-                } catch (IOException e) {
-                    break;
-                }
-            }
-        }
-        //write method
-        public void write(String input) {
-            byte[] msgBuffer = input.getBytes();           //converts entered String into bytes
-            try {
-                mmOutStream.write(msgBuffer);                //write bytes over BT connection via outstream
-            } catch (IOException e) {
-                //if you cannot write, close the application
-                Toast.makeText(getBaseContext(), "La Conexión fallo", Toast.LENGTH_LONG).show();
-                finish();
-
-            }
-        }
-    }
-
-    public void recuperarAdress(){
-        //Get MAC address from DeviceListActivity via intent
-        Intent intent = getIntent();
-
-        //Get the MAC address from the DeviceListActivty via EXTRA
-        //address = intent.getStringExtra(ListDispositivosActivity.EXTRA_DEVICE_ADDRESS);
-        //create device and set the MAC address
-        //Log.i("ramiro", "adress : " + address);
-        BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
-
-        try {
-            btSocket = createBluetoothSocket(device);
-        } catch (IOException e) {
-            Toast.makeText(getBaseContext(), "La creacción del Socket fallo", Toast.LENGTH_LONG).show();
-        }
-        // Establish the Bluetooth socket connection.
-        try
-        {
-            btSocket.connect();
-        } catch (IOException e) {
-            try
-            {
-                btSocket.close();
-            } catch (IOException e2)
-            {
-                //insert code to deal with this
-            }
-        }
-        mConnectedThread = new ConnectedThread(btSocket);
-        mConnectedThread.start();
-
-        //I send a character when resuming.beginning transmission to check device is connected
-        //If it is not an exception will be thrown in the write method and finish() will be called
-        mConnectedThread.write("x");
     }
 
     private void popupListaDispositivos(){
@@ -334,30 +262,53 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Get the device MAC address, which is the last 17 chars in the View
                 String info = ((TextView) view).getText().toString();
-                address = info.substring(info.length() - 17);
+                //address = info.substring(info.length() - 17);
+                mBluetoothAdapter.cancelDiscovery();
+                //recuperarAdress();
                 popupWindow_ListDispositivos.dismiss();
             }
         });
 
         // Get the local Bluetooth adapter
-        mBtAdapter = BluetoothAdapter.getDefaultAdapter();
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         // Get a set of currently paired devices and append to 'pairedDevices'
         //Set pairedDevices = mBtAdapter.getBondedDevices();
-        Set<BluetoothDevice> pairedDevices = mBtAdapter.getBondedDevices();
+        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
 
         // Add previosuly paired devices to the array
         if (pairedDevices.size() > 0) {
             popupView.findViewById(R.id.title_paired_devices).setVisibility(View.VISIBLE);//make title viewable
             for (BluetoothDevice device: pairedDevices) {
+                mBluetoothAdapter.startDiscovery();
                 mPairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
             }
+            buscarDispositivos();
         } else {
             String noDevices = "Ningun dispositivo pudo ser emparejado";
             mPairedDevicesArrayAdapter.add(noDevices);
         }
     }
 
+    private void buscarDispositivos(){
+        mBluetoothAdapter.startDiscovery();
+        // Create a BroadcastReceiver for ACTION_FOUND
+        final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+                // When discovery finds a device
+                if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+                    // Get the BluetoothDevice object from the Intent
+                    BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                    // Add the name and address to an array adapter to show in a ListView
+                    mPairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
+                }
+            }
+        };
+        // Register the BroadcastReceiver
+        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        registerReceiver(mReceiver, filter); // Don't forget to unregister during onDestroy
+    }
 
     private void setupViewPager(ViewPager viewPager) {
         //Drawable imagen;
@@ -421,7 +372,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
 
     public static void activarCheckEngine(){
         tabLayout2.getTabAt(1).select();//PARA SELECCIONAR PESTAÑA DESDE CODIGO

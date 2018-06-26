@@ -18,7 +18,7 @@
     <ListView android:id="@+id/paired_devices"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/azulTransparente_55"
+        android:background="@color/listaNotificacion"
         android:stackFromBottom="false"
         android:layout_weight="1"
         />
