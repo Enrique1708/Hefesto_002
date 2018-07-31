@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "920261321390",
+    "firebase_url": "https://bd-tekken.firebaseio.com",
+    "project_id": "bd-tekken",
+    "storage_bucket": "bd-tekken.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:920261321390:android:51823fc8342e4c80",
+        "android_client_info": {
+          "package_name": "corp.carrizales.hefesto_002"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "920261321390-p8fh8chlccnigv7sl94envndjujqh67q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUkhKx28o1Auz7KjpoHTvu9XDLFtx6rCY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
